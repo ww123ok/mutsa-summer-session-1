@@ -8,13 +8,21 @@
 
 ## 👥 팀 구성 및 담당 API
 
-| 이름 | 담당 도메인 | 구현 기능 및 담당 API
-|:---:|:---:|---|:---:|
-| **신현성** | **결제 / 주문** | • `POST /api/credits/charge` (크레딧 충전 - 동시성 제어 적용)<br>• `POST /api/orders` (장바구니 결제 및 주문 영수증 스냅샷 생성)
-| **원지현** | **가게 / 메뉴** | • `GET /api/stores` (전체 가게 목록 조회 및 카테고리 필터링)<br>• `GET /api/stores/{storeId}` (가게 상세 및 메뉴/옵션 조회)
-| **배승원** | **장바구니** | • `POST /api/carts/items` (장바구니 상품 및 다중 옵션 담기)<br>• `GET /api/carts` (내 장바구니 가게별 그룹화 조회)<br>• `PATCH /api/carts/items/{id}` (수량 조절)<br>• `DELETE /api/carts/items/{id}` (단건 삭제)
+### 👑 신현성 (팀장) - `결제 / 주문`
+- [ ] **`POST /api/credits/charge`** : 크레딧 충전 (동시성 안전 연산 적용)
+- [ ] **`POST /api/orders`** : 장바구니 결제 및 주문 영수증 스냅샷(`OrderItem`) 생성
 
-- **📚 상세 API 명세서 (Notion):** [https://app.notion.com/p/1-3931d7459f5480078265c71007ffa7df#5bdfdb3a4e94422eb7d6ec038345c7a4]
+### 👤 원지현 (팀원 A) - `가게 / 메뉴`
+- [ ] **`GET /api/stores`** : 전체 가게 목록 조회 (카테고리 필터링 적용)
+- [ ] **`GET /api/stores/{storeId}`** : 특정 가게 상세 및 하위 메뉴/옵션 목록 조회
+
+### 👤 배승원 (팀원 B) - `장바구니`
+- [ ] **`POST /api/carts/items`** : 장바구니 상품 및 다중 옵션 담기 (`CartItemOption`)
+- [ ] **`GET /api/carts`** : 내 장바구니 가게별 그룹화 조회
+- [ ] **`PATCH /api/carts/items/{id}`** : 장바구니 상품 수량 변경 (`+`, `-`)
+- [ ] **`DELETE /api/carts/items/{id}`** : 장바구니 상품 단건 삭제 (`X`)
+
+- **📚 상세 API 명세서 (Notion):** [상세 API 명세서 보러가기](https://app.notion.com/p/1-3931d7459f5480078265c71007ffa7df#5bdfdb3a4e94422eb7d6ec038345c7a4)
 
 ---
 
