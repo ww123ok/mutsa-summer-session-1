@@ -8,6 +8,10 @@
 
 ## 👥 팀 구성 및 담당 API
 
+---
+- **📚 상세 API 명세서 (Notion):** [API 명세서 보러가기](https://app.notion.com/p/1-3931d7459f5480078265c71007ffa7df#5bdfdb3a4e94422eb7d6ec038345c7a4)
+---
+
 ### 신현성 - `결제 / 주문`
 - [ ] **`POST /api/credits/charge`** : 크레딧 충전 (동시성 안전 연산 적용)
 - [ ] **`POST /api/orders`** : 장바구니 결제 및 주문 영수증 스냅샷(`OrderItem`) 생성
@@ -21,8 +25,6 @@
 - [ ] **`GET /api/carts`** : 내 장바구니 가게별 그룹화 조회
 - [ ] **`PATCH /api/carts/items/{id}`** : 장바구니 상품 수량 변경 (`+`, `-`)
 - [ ] **`DELETE /api/carts/items/{id}`** : 장바구니 상품 단건 삭제 (`X`)
-
-- **📚 상세 API 명세서 (Notion):** [상세 API 명세서 보러가기](https://app.notion.com/p/1-3931d7459f5480078265c71007ffa7df#5bdfdb3a4e94422eb7d6ec038345c7a4)
 
 ---
 
