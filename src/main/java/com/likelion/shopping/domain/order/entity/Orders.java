@@ -3,7 +3,6 @@ package com.likelion.shopping.domain.order.entity;
 import com.likelion.shopping.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

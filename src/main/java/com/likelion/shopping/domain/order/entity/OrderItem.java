@@ -19,9 +19,6 @@ public class OrderItem {
     @JoinColumn(name = "orders_id", nullable = false)
     private Orders orders;
 
-    @Column(name = "menu_id")
-    private Long menuId;
-
     @Column(name = "menu_name", nullable = false, length = 100)
     private String menuName;
 
@@ -38,7 +35,6 @@ public class OrderItem {
     public static OrderItem create(Orders orders, Long menuId, String menuName, int orderPrice, int quantity) {
         return OrderItem.builder()
                 .orders(orders)
-                .menuId(menuId)
                 .menuName(menuName)
                 .orderPrice(orderPrice)
                 .quantity(quantity)
