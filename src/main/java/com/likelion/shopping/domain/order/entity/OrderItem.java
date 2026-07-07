@@ -32,7 +32,7 @@ public class OrderItem {
     @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL)
     private List<OrderItemOption> orderItemOptions = new ArrayList<>();
 
-    public static OrderItem create(Orders orders, Long menuId, String menuName, int orderPrice, int quantity) {
+    public static OrderItem create(Orders orders, String menuName, int orderPrice, int quantity) {
         return OrderItem.builder()
                 .orders(orders)
                 .menuName(menuName)
