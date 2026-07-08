@@ -1,5 +1,6 @@
 package com.likelion.shopping.domain.cart.controller;
 
+import com.likelion.shopping.domain.cart.dto.CartItemQuantityRequest;
 import com.likelion.shopping.domain.cart.dto.CartItemRequest;
 import com.likelion.shopping.domain.cart.dto.CartResponse;
 import com.likelion.shopping.domain.cart.service.CartService;
@@ -43,6 +44,21 @@ public class CartController {
         response.put("status", HttpStatus.OK.value()); // 200
         response.put("message", "장바구니 목록 조회 성공");
         response.put("data", cartResponse);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/items/{cartItemId}")
+    public ResponseEntity<Map<String, Object>> updateCartItemQuantity(
+            @RequestHeader("Member-Id") Long memberId,
+            @PathVariable Long cartItemId,
+            @RequestBody CartItemQuantityRequest request) {
+
+        cartService.updateCartItemQuantity(memberId, cartItemId, request);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.OK.value()); // 200
+        response.put("message", "장바구니 상품 수량이 변경되었습니다.");
 
         return ResponseEntity.ok(response);
     }
