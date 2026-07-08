@@ -103,4 +103,18 @@ public class CartService {
         // 3. 수량 변경 (JPA 변경 감지로 인해 알아서 DB에 UPDATE 쿼리가 날아감)
         cartItem.updateQuantity(request.getQuantity());
     }
+
+    public void deleteCartItem(Long memberId, Long cartItemId) {
+        // 1. 삭제할 장바구니 아이템 조회
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 장바구니 상품입니다."));
+
+        // 2. 이 장바구니 상품이 내 것인지 권한 체크 (보안 필수!)
+        if (!cartItem.getCart().getMember().getId().equals(memberId)) {
+            throw new IllegalArgumentException("해당 상품을 삭제할 권한이 없습니다.");
+        }
+
+        // 3. 상품 삭제
+        cartItemRepository.delete(cartItem);
+    }
 }

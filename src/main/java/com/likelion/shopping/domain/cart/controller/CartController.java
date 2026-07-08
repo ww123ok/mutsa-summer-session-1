@@ -62,4 +62,18 @@ public class CartController {
 
         return ResponseEntity.ok(response);
     }
+
+    @DeleteMapping("/items/{cartItemId}")
+    public ResponseEntity<Map<String, Object>> deleteCartItem(
+            @RequestHeader("Member-Id") Long memberId,
+            @PathVariable Long cartItemId) {
+
+        cartService.deleteCartItem(memberId, cartItemId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", HttpStatus.OK.value()); // 200
+        response.put("message", "장바구니 상품이 삭제되었습니다.");
+
+        return ResponseEntity.ok(response);
+    }
 }
