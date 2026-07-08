@@ -1,6 +1,9 @@
 package com.likelion.shopping.domain.cart.service;
 
 import com.likelion.shopping.domain.cart.dto.CartItemRequest;
+import com.likelion.shopping.domain.cart.dto.CartItemResponse;
+import com.likelion.shopping.domain.cart.dto.CartResponse;
+import com.likelion.shopping.domain.cart.dto.StoreGroupResponse;
 import com.likelion.shopping.domain.cart.entity.Cart;
 import com.likelion.shopping.domain.cart.entity.CartItem;
 import com.likelion.shopping.domain.cart.entity.CartItemOption;
@@ -57,5 +60,34 @@ public class CartService {
                 cartItemOptionRepository.save(cartItemOption);
             }
         }
+    }
+
+    public CartResponse getCartList(Long memberId) {
+        // 1. 회원의 장바구니 조회 (없으면 빈 장바구니 반환)
+        Cart cart = cartRepository.findByMemberId(memberId)
+                .orElse(null);
+
+        if (cart == null || cart.getCartItems().isEmpty()) {
+            return CartResponse.from(java.util.Collections.emptyList());
+        }
+
+        // 2. 장바구니 아이템들을 '가게(Store)' 기준으로 그룹화 (Map<Store, List<CartItem>>)
+        java.util.Map<com.likelion.shopping.domain.store.entity.Store, java.util.List<CartItem>> groupedItems =
+                cart.getCartItems().stream()
+                        .collect(java.util.stream.Collectors.groupingBy(item -> item.getMenu().getStore()));
+
+        // 3. 그룹화된 데이터를 DTO로 변환
+        java.util.List<StoreGroupResponse> storeGroups = groupedItems.entrySet().stream()
+                .map(entry -> {
+                    com.likelion.shopping.domain.store.entity.Store store = entry.getKey();
+                    java.util.List<CartItemResponse> itemResponses = entry.getValue().stream()
+                            .map(CartItemResponse::from)
+                            .toList();
+                    return StoreGroupResponse.of(store, itemResponses);
+                })
+                .toList();
+
+        // 4. 최종 결과 반환
+        return CartResponse.from(storeGroups);
     }
 }
