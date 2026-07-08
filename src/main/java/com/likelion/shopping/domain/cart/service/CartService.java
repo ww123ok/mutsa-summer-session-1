@@ -1,9 +1,6 @@
 package com.likelion.shopping.domain.cart.service;
 
-import com.likelion.shopping.domain.cart.dto.CartItemRequest;
-import com.likelion.shopping.domain.cart.dto.CartItemResponse;
-import com.likelion.shopping.domain.cart.dto.CartResponse;
-import com.likelion.shopping.domain.cart.dto.StoreGroupResponse;
+import com.likelion.shopping.domain.cart.dto.*;
 import com.likelion.shopping.domain.cart.entity.Cart;
 import com.likelion.shopping.domain.cart.entity.CartItem;
 import com.likelion.shopping.domain.cart.entity.CartItemOption;
@@ -89,5 +86,21 @@ public class CartService {
 
         // 4. 최종 결과 반환
         return CartResponse.from(storeGroups);
+    }
+
+
+
+    public void updateCartItemQuantity(Long memberId, Long cartItemId, CartItemQuantityRequest request) {
+        // 1. 변경할 장바구니 아이템 조회
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 장바구니 상품입니다."));
+
+        // 2. 이 장바구니 상품이 내 것인지 권한 체크 (보안 필수!)
+        if (!cartItem.getCart().getMember().getId().equals(memberId)) {
+            throw new IllegalArgumentException("해당 상품의 수량을 변경할 권한이 없습니다.");
+        }
+
+        // 3. 수량 변경 (JPA 변경 감지로 인해 알아서 DB에 UPDATE 쿼리가 날아감)
+        cartItem.updateQuantity(request.getQuantity());
     }
 }
