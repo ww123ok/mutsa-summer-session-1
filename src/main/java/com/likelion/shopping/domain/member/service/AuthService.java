@@ -1,9 +1,6 @@
 package com.likelion.shopping.domain.member.service;
 
-import com.likelion.shopping.domain.member.dto.LoginRequest;
-import com.likelion.shopping.domain.member.dto.SignupRequest;
-import com.likelion.shopping.domain.member.dto.SignupResponse;
-import com.likelion.shopping.domain.member.dto.TokenResponse;
+import com.likelion.shopping.domain.member.dto.*;
 import com.likelion.shopping.domain.member.entity.Member;
 import com.likelion.shopping.domain.member.repository.MemberRepository;
 import com.likelion.shopping.global.jwt.JwtTokenProvider;
@@ -63,5 +60,11 @@ public class AuthService {
 
         // ④ TokenResponse DTO에 담아서 반환
         return TokenResponse.of(accessToken);
+    }
+
+    public UserResponse getMe(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return UserResponse.from(member);
     }
 }
