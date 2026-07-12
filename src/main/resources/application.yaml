@@ -1,23 +1,19 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:shoppingdb;MODE=MySQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: ${DB_URL:jdbc:mysql://localhost:3306/mutsa_shop?characterEncoding=UTF-8&serverTimezone=Asia/Seoul}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update # 테이블이 없으면 생성, 있으면 변경사항만 반영
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-    defer-datasource-initialization: true
+    defer-datasource-initialization: false
 
   sql:
     init:
-      mode: always
+      mode: never # H2용 임시 더미 데이터(data.sql)가 MySQL에 들어가서 에러 나는 것을 방지!
