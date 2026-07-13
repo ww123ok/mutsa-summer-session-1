@@ -29,9 +29,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/v3/api-docs/**",
-            "/api/auth/**",
-            "/api/users/signup",
-            "/api/users/login"
+            "/api/auth/**"
     };
 
     @Bean
@@ -58,4 +56,7 @@ public class SecurityConfig {
                 );
         return http.build();
     }
+
+    @Bean
+    public
 }
