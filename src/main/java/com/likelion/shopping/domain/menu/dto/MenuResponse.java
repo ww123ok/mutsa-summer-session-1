@@ -12,6 +12,7 @@ public class MenuResponse {
     private String name;
     private Integer price;
     private String imageUrl;
+    private boolean isMultiple;
 
     public static MenuResponse from(Menu menu) {
         return MenuResponse.builder()
@@ -19,6 +20,7 @@ public class MenuResponse {
                 .name(menu.getName())
                 .price(menu.getPrice())
                 .imageUrl(menu.getStore().getImageUrl())
+                .isMultiple(menu.isMultiple())
                 .build();
     }
 }

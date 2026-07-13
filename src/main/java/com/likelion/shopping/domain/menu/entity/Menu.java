@@ -27,12 +27,17 @@ public class Menu {
     @Column(length = 255)
     private String description;
 
-    public static Menu create(Store store, String name, int price, String description) {
+    // 옵션 복수 선택 가능 여부 추가 (true: 복수 선택 / false: 단수 선택)
+    @Column(nullable = false)
+    private boolean isMultiple;
+
+    public static Menu create(Store store, String name, int price, String description, boolean isMultiple) {
         return Menu.builder()
                 .store(store)
                 .name(name)
                 .price(price)
                 .description(description)
+                .isMultiple(isMultiple)
                 .build();
     }
 }
