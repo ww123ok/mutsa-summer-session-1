@@ -3,6 +3,8 @@ package com.likelion.shopping.domain.menu.entity;
 import com.likelion.shopping.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Getter
@@ -27,9 +29,12 @@ public class Menu {
     @Column(length = 255)
     private String description;
 
-    // 옵션 복수 선택 가능 여부 추가 (true: 복수 선택 / false: 단수 선택)
     @Column(nullable = false)
     private boolean isMultiple;
+
+    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<MenuOption> options = new ArrayList<>();
 
     public static Menu create(Store store, String name, int price, String description, boolean isMultiple) {
         return Menu.builder()
