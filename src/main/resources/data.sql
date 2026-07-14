@@ -4,14 +4,14 @@ VALUES (1, 'hyeonseong@likelion.org', 'password123', '현성', 5000);
 
 -- 2. 가게 세팅
 INSERT INTO store (id, name, category, rating, image_url)
-VALUES (1, '맛나분식', 'KOREAN', 4.5, 'http://image.url');
+VALUES (1, '냠냠 분식', 'KOREAN', 4.4, 'http://image.url');
 
 -- 3. 메뉴 및 옵션 세팅 (떡볶이 3000원, 치즈추가 1000원)
-INSERT INTO menu (id, store_id, name, price, description)
-VALUES (1, 1, '떡볶이', 3000, '매콤달콤 떡볶이');
+INSERT INTO menu (id, store_id, name, price, description, is_multiple)
+VALUES (1, 1, '떡볶이', 3000, '매콤달콤 떡볶이', FALSE);
 
 INSERT INTO menu_option (id, menu_id, name, additional_price)
-VALUES (1, 1, '치즈 추가', 1000);
+VALUES (101, 1, '치즈 추가', 1000);
 
 -- 4. 장바구니 및 장바구니 아이템 세팅 (현성이의 장바구니에 떡볶이 1개 담기)
 INSERT INTO cart (id, member_id)
