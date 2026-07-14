@@ -46,6 +46,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(allowUris).permitAll() // 회원가입/로그인 API 허용
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/stores/**").permitAll()
                         .anyRequest().authenticated() // 나머지 모든 요청은 인증 필요
                 )
                 .exceptionHandling(handler -> handler
