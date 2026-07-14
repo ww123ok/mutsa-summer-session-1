@@ -10,9 +10,11 @@ import java.util.Collections;
 @Getter
 public class CustomUserDetails implements UserDetails {
 
+    private final Long id;
     private final String email;
 
-    public CustomUserDetails(String email) {
+    public CustomUserDetails(Long id, String email) {
+        this.id = id;
         this.email = email;
     }
 
