@@ -7,11 +7,15 @@ import java.util.List;
 @Getter
 @Builder
 public class CartResponse {
-    private List<StoreGroupResponse> storeGroups;
+    private Long cartId;       // 💡 [명세서 일치] 장바구니 ID 추가!
+    private int totalPrice;    // 💡 [명세서 일치] 장바구니 전체 결제 총액 (Grand Total) 추가!
+    private List<StoreGroupResponse> stores; // 💡 [명세서 일치] storeGroups -> stores 로 변경!
 
-    public static CartResponse from(List<StoreGroupResponse> storeGroups) {
+    public static CartResponse of(Long cartId, int totalPrice, List<StoreGroupResponse> stores) {
         return CartResponse.builder()
-                .storeGroups(storeGroups)
+                .cartId(cartId)
+                .totalPrice(totalPrice)
+                .stores(stores)
                 .build();
     }
 }
