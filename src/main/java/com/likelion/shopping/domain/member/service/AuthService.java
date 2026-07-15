@@ -1,5 +1,7 @@
 package com.likelion.shopping.domain.member.service;
 
+import com.likelion.shopping.domain.cart.dto.CartResponse;
+import com.likelion.shopping.domain.cart.service.CartService;
 import com.likelion.shopping.domain.member.dto.*;
 import com.likelion.shopping.domain.member.entity.Member;
 import com.likelion.shopping.domain.member.repository.MemberRepository;
@@ -18,6 +20,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
+    // 장바구니 목록 조회를 위해 CartService 주입
+    private final CartService cartService;
+
     @Transactional
     public SignupResponse signup(SignupRequest request) {
         // 1. 이메일 중복 검증
@@ -29,7 +34,6 @@ public class AuthService {
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         // 3. 팀에서 만든 정적 팩토리 메서드(Member.create)를 사용하여 회원 생성
-        //    (가입 축하금으로 초기 크레딧은 0으로 설정, 필요시 수정 가능)
         Member member = Member.create(
                 request.getEmail(),
                 encodedPassword,
@@ -44,27 +48,30 @@ public class AuthService {
         return SignupResponse.from(savedMember);
     }
 
-    // 2. 로그인 및 JWT 토큰 발급 메서드 추가!
+    // 로그인 및 JWT 토큰 발급 메서드
     public TokenResponse login(LoginRequest request) {
-        // ① 이메일로 DB에서 회원 조회 (없으면 에러 발생)
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일입니다."));
 
-        // ② 비밀번호 일치 여부 검사! (입력한 평문 비밀번호 vs DB에 저장된 암호화 비밀번호 비교)
         if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        // ③ 검증 완료! 토큰 기계로 Access Token 발급
         String accessToken = jwtTokenProvider.createAccessToken(member.getEmail());
 
-        // ④ TokenResponse DTO에 담아서 반환
         return TokenResponse.of(accessToken);
     }
 
+    // 내 프로필 조회 시 장바구니 목록까지 한 번에 싹 긁어서 합체 반환!
     public UserResponse getMe(String email) {
+        // 1. 이메일로 내 회원 정보 조회
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
-        return UserResponse.from(member);
+
+        // 2. CartService의 getCartList를 호출해 내 장바구니(가게, 메뉴, 옵션, 수량) 전체 조회!
+        CartResponse cartResponse = cartService.getCartList(member.getId());
+
+        // 3. 프로필 + 장바구니를 합체해서 최종 반환!
+        return UserResponse.of(member, cartResponse);
     }
 }
