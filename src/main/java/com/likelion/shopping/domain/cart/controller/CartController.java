@@ -1,19 +1,14 @@
 package com.likelion.shopping.domain.cart.controller;
 
-import com.likelion.shopping.domain.cart.dto.CartItemQuantityRequest;
-import com.likelion.shopping.domain.cart.dto.CartItemRequest;
-import com.likelion.shopping.domain.cart.dto.CartResponse;
+import com.likelion.shopping.domain.cart.dto.*;
 import com.likelion.shopping.domain.cart.service.CartService;
 import com.likelion.shopping.global.config.CustomUserDetails;
+import com.likelion.shopping.global.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,59 +18,35 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping("/items")
-    public ResponseEntity<Map<String, Object>> addCartItem(
-            @AuthenticationPrincipal CustomUserDetails userDetails, // 💡 토큰에서 정보 가져오기
+    public ResponseEntity<ApiResponse<Void>> addCartItem(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody CartItemRequest request) {
-
-        cartService.addCartItem(userDetails.getId(), request); // 💡 getId()로 숫자 뽑기
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.CREATED.value());
-        response.put("message", "장바구니에 메뉴가 성공적으로 담겼습니다.");
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        cartService.addCartItem(userDetails.getId(), request);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.of(201, "장바구니에 메뉴가 성공적으로 담겼습니다."));
     }
 
     @GetMapping
-    public ResponseEntity<Map<String, Object>> getCartList(
-            @AuthenticationPrincipal CustomUserDetails userDetails) { // 💡 수정
-
-        CartResponse cartResponse = cartService.getCartList(userDetails.getId()); // 💡 수정
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.OK.value());
-        response.put("message", "장바구니 목록 조회 성공");
-        response.put("data", cartResponse);
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ApiResponse<CartResponse>> getCartList(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        CartResponse cartResponse = cartService.getCartList(userDetails.getId());
+        return ResponseEntity.ok(ApiResponse.success(200, "장바구니 목록 조회 성공", cartResponse));
     }
 
     @PatchMapping("/items/{cartItemId}")
-    public ResponseEntity<Map<String, Object>> updateCartItemQuantity(
-            @AuthenticationPrincipal CustomUserDetails userDetails, // 💡 수정
+    public ResponseEntity<ApiResponse<Void>> updateCartItemQuantity(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long cartItemId,
             @RequestBody CartItemQuantityRequest request) {
-
-        cartService.updateCartItemQuantity(userDetails.getId(), cartItemId, request); // 💡 수정
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.OK.value());
-        response.put("message", "장바구니 상품 수량이 변경되었습니다.");
-
-        return ResponseEntity.ok(response);
+        cartService.updateCartItemQuantity(userDetails.getId(), cartItemId, request);
+        return ResponseEntity.ok(ApiResponse.of(200, "장바구니 상품 수량이 변경되었습니다."));
     }
 
     @DeleteMapping("/items/{cartItemId}")
-    public ResponseEntity<Map<String, Object>> deleteCartItem(
-            @AuthenticationPrincipal CustomUserDetails userDetails, // 💡 수정
+    public ResponseEntity<ApiResponse<Void>> deleteCartItem(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long cartItemId) {
-
-        cartService.deleteCartItem(userDetails.getId(), cartItemId); // 💡 수정
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("status", HttpStatus.OK.value());
-        response.put("message", "장바구니 상품이 삭제되었습니다.");
-
-        return ResponseEntity.ok(response);
+        cartService.deleteCartItem(userDetails.getId(), cartItemId);
+        return ResponseEntity.ok(ApiResponse.of(200, "장바구니 상품이 삭제되었습니다."));
     }
 }
