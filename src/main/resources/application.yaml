@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${DB_URL:jdbc:mysql://localhost:3306/mutsa_shop?characterEncoding=UTF-8&serverTimezone=Asia/Seoul}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/mutsa_shop?createDatabaseIfNotExist=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul}
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD}
