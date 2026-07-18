@@ -20,5 +20,5 @@ spring:
 
 
 jwt:
-  secret: ${JWT_SECRET:likeLionMutsaShoppingMallBackendProjectSecretKey20260712!}
+  secret: ${JWT_SECRET:likeLionMutsaShoppingMallBackendProjectSecretKey2026!}
   expiration: 3600000
