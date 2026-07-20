@@ -18,6 +18,27 @@ spring:
     init:
       mode: never
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-name: kakao
+            client-id: 99e08f18462bedcd4ea4bb7ef1b5734e
+            client-secret: lS3j6B2AybfJ7HGcTh5USiCnUkhUw5NL
+            client-authentication-method: client_secret_post
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://localhost:8080/login/oauth2/code/kakao"
+            scope:
+              - profile_nickname
+              - profile_image
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
 
 jwt:
   secret: ${JWT_SECRET:likeLionMutsaShoppingMallBackendProjectSecretKey2026!}
