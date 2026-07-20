@@ -4,6 +4,7 @@ import com.likelion.shopping.domain.cart.dto.*;
 import com.likelion.shopping.domain.cart.service.CartService;
 import com.likelion.shopping.global.config.CustomUserDetails;
 import com.likelion.shopping.global.dto.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class CartController {
     public ResponseEntity<ApiResponse<Void>> updateCartItemQuantity(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long cartItemId,
-            @RequestBody CartItemQuantityRequest request) {
+            @Valid @RequestBody CartItemQuantityRequest request) {
         cartService.updateCartItemQuantity(userDetails.getId(), cartItemId, request);
         return ResponseEntity.ok(ApiResponse.of(200, "장바구니 상품 수량이 변경되었습니다."));
     }
