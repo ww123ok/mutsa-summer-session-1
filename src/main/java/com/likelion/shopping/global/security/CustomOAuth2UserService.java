@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -31,7 +32,10 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String provider = userRequest.getClientRegistration().getRegistrationId(); // "kakao"
         String providerId = String.valueOf(attributes.get("id"));
 
+        // unchecked cast 컴파일 경고 제거
+        @SuppressWarnings("unchecked")
         Map<String, Object> properties = (Map<String, Object>) attributes.getOrDefault("properties", Map.of());
+        @SuppressWarnings("unchecked")
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.getOrDefault("kakao_account", Map.of());
 
         String nickname = (String) properties.get("nickname");
@@ -48,7 +52,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String finalEmail = email;
         Member member = memberRepository.findByProviderAndProviderId(provider, providerId)
                 .map(existingMember -> {
-                    existingMember.updateSocialProfile(nickname, profileImage);
+                    // 변경 사항이 있을 때만 updateSocialProfile 호출하여 불필요한 DB UPDATE 쿼리(Dirty Checking) 방지
+                    // Objects.equals()를 사용하여 null이 들어와도 NullPointerException이 발생하지 않도록 방어운전 적용
+                    if (!Objects.equals(nickname, existingMember.getName()) ||
+                            !Objects.equals(profileImage, existingMember.getProfileImage())) {
+                        log.info("🔄 [카카오 프로필 변경 감지] 유저 정보를 최신화합니다.");
+                        existingMember.updateSocialProfile(nickname, profileImage);
+                    }
                     return existingMember;
                 })
                 .orElseGet(() -> {
@@ -57,7 +67,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                     return memberRepository.save(newMember);
                 });
 
-        // [RBAC 적용 완료] member.getRole()을 넘겨주어 권한까지 완벽 부여
+        // [RBAC 적용 완료] member.getRole()을 넘겨주어 권한 부여
         return new CustomUserDetails(member.getId(), member.getEmail(), member.getRole(), attributes);
     }
 }
