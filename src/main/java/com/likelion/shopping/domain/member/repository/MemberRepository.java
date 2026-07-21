@@ -20,4 +20,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 로그인 시 이메일로 사용자 검증 및 토큰 발급용
     Optional<Member> findByEmail(String email);
+
+    // [카카오 소셜 로그인용 추가] 카카오 제공자("kakao")와 고유 ID로 이미 가입된 유저인지 찾는 메서드
+    Optional<Member> findByProviderAndProviderId(String provider, String providerId);
 }

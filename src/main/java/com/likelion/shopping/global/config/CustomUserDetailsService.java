@@ -16,10 +16,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // DB에서 멤버를 찾고, id와 email을 담아서 CustomUserDetails 생성!
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 사용자입니다: " + email));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일을 가진 사용자를 찾을 수 없습니다: " + email));
 
-        return new CustomUserDetails(member.getId(), member.getEmail());
+        // role 필드까지 포함하여 CustomUserDetails 생성
+        return new CustomUserDetails(member.getId(), member.getEmail(), member.getRole());
     }
 }
